@@ -1,0 +1,65 @@
+3) Realice un programa en el que 3 robots realicen escaleras de 4 escalones. El tamaño de cada
+escalón se incrementa en un 1 respecto al escalón anterior. El primer escalón será de 1x1, el
+segundo de 2x2, y así sucesivamente, como se muestra a continuación:
+
+Al finalizar el recorrido, cada robot debe informar la cantidad de escalones en los que la
+cantidad de papeles superó en 1 a la cantidad de flores. Las esquinas deben quedar sin
+modificar.
+
+programa ejercicio1
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso recorrerAv(ES flores:numero ; ES vacias:numero)
+  comenzar
+
+  fin
+  proceso depositarFlores(E flores:numero)
+  comenzar
+    repetir flores
+      depositarFlor
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+areas
+  ciudad1:AreaC(1,1,100,100)
+robots
+  robot tipo1
+  variables
+    long:numero
+    papeles:numero
+    flores:numero
+    cant:numero
+  comenzar
+    long := 1
+    cant := 0
+    repetir 4
+      repetir long
+        juntarFlores(flores)
+        juntarPapeles(papeles)
+        si (papeles-1 = flores)
+          cant = cant + 1
+        mover
+      derecha
+      repetir long
+        juntarFlores(flores)
+        juntarPapeles(papeles)
+        si (papeles-1 = flores)
+          cant = cant + 1
+        mover
+      izquierda
+      long = long + 1
+  fin
+
+variables
+
+comenzar
+
+fin
