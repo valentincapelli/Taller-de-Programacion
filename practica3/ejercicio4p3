@@ -31,7 +31,7 @@ robots
     avInicial:= PosAv
     caInicial:= PosCa
     RecibirMensaje(quien,robotjefe)
-    RecibirMensaje(continuar,robotjefe)
+    continuar:= V
     mientras (continuar = V)
       BloquearEsquina(10,10)
       Pos(10,10)
@@ -60,11 +60,6 @@ robots
     EnviarMensaje(2,robot2)
     EnviarMensaje(3,robot3)
     EnviarMensaje(4,robot4)
-
-    EnviarMensaje(V,robot1)
-    EnviarMensaje(V,robot2)
-    EnviarMensaje(V,robot3)
-    EnviarMensaje(V,robot4)
 
     repetir 4
       RecibirMensaje(quien,*)
