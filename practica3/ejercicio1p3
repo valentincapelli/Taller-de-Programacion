@@ -1,0 +1,131 @@
+1- Realice un programa con 2 robots recolectores de flores (floreros) y 2 robots recolectores
+de papeles (papeleros).
+Los floreros comparten área y tienen 5 intentos cada uno para juntar las flores de una
+esquina, dentro de dicha área, elegida al azar en cada intento. Del mismo modo, los
+papeleros comparten área y tienen 3 intentos cada uno para juntar los papeles. En cada
+intento cada robot va a la esquina al azar, junta todos los elementos (flores o papeles según
+le corresponda) y vuelve a su esquina original. Al finalizar sus intentos cada robot debe
+acceder a la esquina (10, 10) y depositar los elementos recogidos de a uno.
+- Área de floreros: (1,1) a (5, 10)
+- Área de papeleros: (6, 1) a (10, 9)
+- Esquinas de inicio de floreros: (6,10) y (7,10)
+- Esquinas de inicio de papeleros: (8,10) y (9,10)
+
+programa ejercicio1
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso depositarFlores
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+  fin
+  proceso depositarPapeles
+  comenzar
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso calcularPosFloreros(ES av:numero; ES ca:numero)
+  variables
+    auxAv,auxCa:numero
+  comenzar
+    Random(auxAv,1,5)
+    Random(auxCa,1,10)
+    av:= auxAv
+    ca:= auxCa
+  fin
+  proceso calcularPosPapeleros(ES av:numero; ES ca:numero)
+  variables
+    auxAv,auxCa:numero
+  comenzar
+    Random(auxAv,6,10)
+    Random(auxCa,1,9)
+    av:= auxAv
+    ca:= auxCa
+  fin
+areas
+  area1: AreaP(6,10,6,10)
+  area2: AreaP(7,10,7,10)
+  area3: AreaP(8,10,8,10)
+  area4: AreaP(9,10,9,10)
+  areaFloreros:AreaPC(1,1,5,10)
+  areaPapeleros:AreaPC(6,1,10,9)
+  area1010: AreaC(10,10,10,10)
+robots
+  robot floreros
+  variables
+    reps,flores,av,ca,avInicio,caInicio:numero
+  comenzar
+    avInicio:= PosAv
+    caInicio:= PosCa
+    reps:= 0
+    flores:= 0
+    mientras (reps < 5)
+      calcularPosFloreros(av,ca)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      juntarFlores(flores)
+      Pos(avInicio,caInicio)
+      LiberarEsquina(av,ca)
+      reps:= reps + 1
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarFlores
+    Pos(avInicio,caInicio)
+    LiberarEsquina(10,10)
+  fin
+  robot papeleros
+  variables
+    reps,papeles,av,ca,avInicio,caInicio:numero
+  comenzar
+    avInicio:= PosAv
+    caInicio:= PosCa
+    reps:= 0
+    papeles:= 0
+    mientras (reps < 3)
+      calcularPosPapeleros(av,ca)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      juntarPapeles(papeles)
+      Pos(avInicio,caInicio)
+      LiberarEsquina(av,ca)
+      reps:= reps + 1
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarPapeles
+    Pos(avInicio,caInicio)
+    LiberarEsquina(10,10)
+  fin
+variables
+  robot1:floreros
+  robot2:floreros
+  robot3:papeleros
+  robot4:papeleros
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areaFloreros)
+  AsignarArea(robot1,area1010)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areaFloreros)
+  AsignarArea(robot2,area1010)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areaPapeleros)
+  AsignarArea(robot3,area1010)
+  AsignarArea(robot4,area4)
+  AsignarArea(robot4,areaPapeleros)
+  AsignarArea(robot4,area1010)
+  Iniciar(robot1,6,10)
+  Iniciar(robot2,7,10)
+  Iniciar(robot3,8,10)
+  Iniciar(robot4,9,10)
+fin

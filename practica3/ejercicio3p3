@@ -1,0 +1,134 @@
+3- Realice un programa donde 4 robots colaboren para recoger todas las flores de una
+esquina indicada por un robot jefe, seleccionada de manera aleatoria dentro del cuadrante
+(2,2) y (10,10). Para ello el jefe determina inicialmente una esquina y los robots deben
+accederla, tomar de a una las flores y volver a su posición inicial. Cuando los robots
+terminan el jefe deberá informar cuál de ellos logró recoger más flores.
+Las esquinas de inicio de los robots deberán ser jefe (1,1) y robots (2,1), (3, 1), (4,1) y (5,1).
+
+programa ejercicio3
+procesos
+  proceso calcularEsquina(ES av:numero; ES ca:numero)
+  variables
+    avaux:numero
+    caaux:numero
+  comenzar
+    Random(avaux,2,10)
+    Random(caaux,2,10)
+    av:= avaux
+    ca:= caaux
+  fin
+  proceso tomarUnaFlor(ES flores:numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+  fin
+areas
+  area1: AreaP(2,1,2,1)
+  area2: AreaP(3,1,3,1)
+  area3: AreaP(4,1,4,1)
+  area4: AreaP(5,1,5,1)
+  area5: AreaP(1,1,1,1)
+  areaReco: AreaPC(2,2,10,10)
+robots
+  robot recolector
+  variables
+    flores,quien,av,ca,avInicial,caInicial:numero
+    continuar:boolean
+  comenzar
+    avInicial:= PosAv
+    caInicial:= PosCa
+    RecibirMensaje(quien,robotjefe)
+    RecibirMensaje(av,robotjefe)
+    RecibirMensaje(ca,robotjefe)
+    RecibirMensaje(continuar,robotjefe)
+    mientras (continuar = V)
+      BloquearEsquina(av,ca)
+      Pos(av,ca)
+      si HayFlorEnLaEsquina
+        tomarFlor
+        flores:= flores+1
+        EnviarMensaje(V,robotjefe)
+      sino
+        EnviarMensaje(F,robotjefe)
+      Pos(avInicial,caInicial)
+      LiberarEsquina(av,ca)
+      RecibirMensaje(continuar,robotjefe)
+    EnviarMensaje(quien,robotjefe)
+    EnviarMensaje(flores,robotjefe)
+  fin
+  robot jefe
+  variables
+    papeles,quien,max,maxr,cant,av,ca:numero
+    continuar:boolean
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    calcularEsquina(av,ca)
+    EnviarMensaje(av,robot1)
+    EnviarMensaje(ca,robot1)
+    EnviarMensaje(av,robot2)
+    EnviarMensaje(ca,robot2)
+    EnviarMensaje(av,robot3)
+    EnviarMensaje(ca,robot3)
+    EnviarMensaje(av,robot4)
+    EnviarMensaje(ca,robot4)
+    continuar:= V
+    mientras (continuar = V)
+      EnviarMensaje(V,robot1)
+      RecibirMensaje(continuar,robot1)
+      si (continuar = V)
+        EnviarMensaje(V,robot2)
+        RecibirMensaje(continuar,robot2)
+        si (continuar = V)
+          EnviarMensaje(V,robot3)
+          RecibirMensaje(continuar,robot3)
+          si(continuar = V)
+            EnviarMensaje(V,robot4)
+            RecibirMensaje(continuar,robot4)
+    EnviarMensaje(F,robot1)
+    EnviarMensaje(F,robot2)
+    EnviarMensaje(F,robot3)
+    EnviarMensaje(F,robot4)
+    max:= 0
+    repetir 4
+      RecibirMensaje(quien,*)
+      si (quien = 1)
+        RecibirMensaje(cant,robot1)
+      sino
+        si (quien = 2)
+          RecibirMensaje(cant,robot2)
+        sino
+          si (quien = 3)
+            RecibirMensaje(cant,robot3)
+          sino
+            RecibirMensaje(cant,robot4)
+      si (cant > max)
+        max:= cant
+        maxr:= quien
+    Informar(maxr)
+  fin
+variables
+  robot1:recolector
+  robot2:recolector
+  robot3:recolector
+  robot4:recolector
+  robotjefe:jefe
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areaReco)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areaReco)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areaReco)
+  AsignarArea(robot4,area4)
+  AsignarArea(robot4,areaReco)
+  AsignarArea(robotjefe,area5)
+  Iniciar(robotjefe,1,1)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,3,1)
+  Iniciar(robot3,4,1)
+  Iniciar(robot4,5,1)
+fin

@@ -1,0 +1,161 @@
+2- Realice un programa en el cual 2 robots corren una carrera. El recorrido realizado por
+cada uno es el que se muestra en la siguiente figura. Durante el recorrido el robot 1 debe
+juntar todas las flores que encuentre en los vértices de cada escalón, mientras que el robot
+2 debe juntar todos los papeles que encuentre en los vértices de cada escalón.
+Al finalizar deben informar la cantidad de elementos recogidos.
+El robot 1 debe iniciar su recorrido en la esquina (1,1) y el robot 2 debe iniciar su recorrido
+en la esquina (31,1).
+Al finalizar la carrera, un robot jefe (inicializado en la esquina (15,1) ) debe informar qué
+robot llegó primero a la esquina central de su recorrido.
+programa ejercicio2
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso reposicionarseFlo
+  comenzar
+    derecha
+    mover
+  fin
+  proceso reposicionarsePap
+  comenzar
+    izquierda
+    mover
+  fin
+  proceso escalonInicialFlores(ES flores:numero)
+  variables
+    long:numero
+  comenzar
+    long:= 5
+    repetir 5
+      juntarFlores(flores)
+      repetir long
+        mover
+      juntarFlores(flores)
+      izquierda
+      si (long = 1)
+        BloquearEsquina(15,15)
+      repetir long
+        mover
+      derecha
+      long:= long - 1
+    reposicionarseFlo
+    LiberarEsquina(15,15)
+  fin
+  proceso escalonFinalFlores(ES flores:numero)
+  variables
+    long:numero
+  comenzar
+    long:= 2
+    repetir 4
+      juntarFlores(flores)
+      repetir long
+        mover
+      juntarFlores(flores)
+      izquierda
+      repetir long
+        mover
+      derecha
+      long:= long + 1
+  fin
+  proceso escalonInicialPapeles(ES papeles:numero)
+  variables
+    long:numero
+  comenzar
+    long:= 5
+    repetir 5
+      juntarPapeles(papeles)
+      repetir long
+        mover
+      juntarPapeles(papeles)
+      derecha
+      si (long = 1)
+        BloquearEsquina(15,15)
+      repetir long
+        mover
+      izquierda
+      long:= long - 1
+    reposicionarsePap
+    LiberarEsquina(15,15)
+  fin
+  proceso escalonFinalPapeles(ES papeles:numero)
+  variables
+    long:numero
+  comenzar
+    long:= 2
+    repetir 4
+      juntarPapeles(papeles)
+      repetir long
+        mover
+      juntarPapeles(papeles)
+      derecha
+      repetir long
+        mover
+      izquierda
+      long:= long + 1
+  fin
+areas
+  area1: AreaC(1,1,100,100)
+
+robots
+  robot tipo1Flores
+  variables
+    flores,quien:numero
+  comenzar
+    RecibirMensaje(quien,robot3)
+    escalonInicialFlores(flores)
+    EnviarMensaje(quien,robot3)
+    escalonFinalFlores(flores)
+    Informar(flores)
+    EnviarMensaje(V,robot3)
+  fin
+  robot tipo2Papeles
+  variables
+    papeles,quien:numero
+  comenzar
+    RecibirMensaje(quien,robot3)
+    escalonInicialPapeles(papeles)
+    EnviarMensaje(quien,robot3)
+    escalonFinalPapeles(papeles)
+    Informar(papeles)
+    EnviarMensaje(V,robot3)
+  fin
+  robot jefe
+  variables
+    primero,quien:numero
+    termino:boolean
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    RecibirMensaje(primero,*)
+    RecibirMensaje(quien,*)
+    RecibirMensaje(termino,*)
+    RecibirMensaje(termino,*)
+    Informar(primero)
+  fin
+variables
+  robot1:tipo1Flores
+  robot2:tipo2Papeles
+  robot3:jefe
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area1)
+  AsignarArea(robot3,area1)
+  Iniciar(robot1,31,1)
+  Iniciar(robot2,1,1)
+  Iniciar(robot3,15,1)
+fin
