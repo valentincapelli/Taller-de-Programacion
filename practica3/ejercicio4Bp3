@@ -12,7 +12,7 @@ b- Implemente una variante en la cual los robots luego de tomar cada flor de la 
 vuelvan a la esquina inicial.
 
 
-programa ejercicio4
+programa ejercicio4B
 procesos
   proceso JuntarFlores(ES flores:numero)
   comenzar
@@ -21,7 +21,13 @@ procesos
       flores:= flores + 1
   fin
 areas
-  area1: AreaP(1,1,100,100)
+  areacoordinador: AreaP(1,1,1,1)
+  areapc: AreaPC(10,10,10,10)
+  areac: AreaC(11,11,11,11)
+  area1: AreaP(9,9,9,9)
+  area2: AreaP(9,10,9,10)
+  area3: AreaP(9,11,9,11)
+  area4: AreaP(9,12,9,12)
 robots
   robot recolector
   variables
@@ -31,17 +37,12 @@ robots
     avInicial:= PosAv
     caInicial:= PosCa
     RecibirMensaje(quien,robotjefe)
-    RecibirMensaje(continuar,robotjefe)
+    continuar:= V
     mientras (continuar = V)
       BloquearEsquina(10,10)
       Pos(10,10)
       si HayFlorEnLaEsquina
         tomarFlor
-      sino
-        continuar:= F
-        Pos(avInicial,caInicial)
-        LiberarEsquina(10,10)
-      si (continuar = V )
         Pos(avInicial,caInicial)
         LiberarEsquina(10,10)
         BloquearEsquina(11,11)
@@ -50,6 +51,10 @@ robots
           depositarFlor
         Pos(avInicial,caInicial)
         LiberarEsquina(11,11)
+      sino
+        continuar:= F
+        Pos(avInicial,caInicial)
+        LiberarEsquina(10,10)
     EnviarMensaje(quien,robotjefe)
   fin
   robot jefe
@@ -61,12 +66,10 @@ robots
     EnviarMensaje(2,robot2)
     EnviarMensaje(3,robot3)
     EnviarMensaje(4,robot4)
-
     EnviarMensaje(V,robot1)
     EnviarMensaje(V,robot2)
     EnviarMensaje(V,robot3)
     EnviarMensaje(V,robot4)
-
     repetir 4
       RecibirMensaje(quien,*)
     ult:= quien
@@ -84,11 +87,19 @@ variables
   robotjefe:jefe
 comenzar
   AsignarArea(robot1,area1)
-  AsignarArea(robot2,area1)
-  AsignarArea(robot3,area1)
-  AsignarArea(robot4,area1)
-  AsignarArea(robotjefe,area1)
-
+  AsignarArea(robot1,areapc)
+  AsignarArea(robot1,areac)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areapc)
+  AsignarArea(robot2,areac)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areapc)
+  AsignarArea(robot3,areac)
+  AsignarArea(robot4,area4)
+  AsignarArea(robot4,areapc)
+  AsignarArea(robot4,areac)
+  AsignarArea(robotjefe,areacoordinador)
+  AsignarArea(robotjefe,areac)
   Iniciar(robotjefe,1,1)
   Iniciar(robot1,9,9)
   Iniciar(robot2,9,10)
