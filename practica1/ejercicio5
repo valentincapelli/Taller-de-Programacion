@@ -1,0 +1,103 @@
+Realice un programa en el que cuatro robots realizan las siguientes actividades:
+● El robot 1 debe limpiar de flores las primeras 15 esquinas de las calles 75 y 80. Al finalizar
+cada calle, debe depositar todas las flores en la última esquina.
+● El robot 2 debe limpiar de papeles las últimas 20 esquinas de las avenidas 75 y 80. Al
+finalizar cada avenida debe depositar todos los papeles en la primera esquina.
+● El robot 3 debe limpiar de flores las últimas 30 esquinas de las calles 10 y 15. Al finalizar
+cada calle, debe depositar todas las flores en la última esquina.
+● El robot 4 debe limpiar de papeles las primeras 10 esquinas de las avenidas 10 y 15. Al
+finalizar cada avenida debe depositar todos los papeles en la primera esquina.
+
+programa nombre
+procesos
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso juntarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso tirarPapeles
+  comenzar
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso tirarFlores
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+  fin
+  proceso recorrerFlores(E long: numero)
+  comenzar
+    repetir long
+      juntarFlores
+      mover
+    juntarFlores
+    tirarFlores
+  fin
+  proceso recorrerPapeles(E long: numero)
+  comenzar
+    repetir long
+      juntarPapeles
+      mover
+    juntarPapeles
+  fin
+areas
+  area1: AreaP(1,75,15,80)
+  area2: AreaP(75,80,80,100)
+  area3: AreaP(70,10,100,15)
+  area4: AreaP(10,1,15,10)
+
+robots
+  robot tipo1
+  comenzar
+    derecha
+    recorrerFlores(14)
+    Pos(1,80)
+    recorrerFlores(14)
+  fin
+  robot tipo2
+  comenzar
+    recorrerPapeles(20)
+    Pos(75,80)
+    tirarPapeles
+    Pos(80,80)
+    recorrerPapeles(20)
+    Pos(80,80)
+    tirarPapeles
+  fin
+  robot tipo3
+  comenzar
+    derecha
+    recorrerFlores(30)
+    Pos(70,15)
+    recorrerFlores(30)
+  fin
+  robot tipo4
+  comenzar
+    recorrerPapeles(9)
+    Pos(10,1)
+    tirarPapeles
+    Pos(15,1)
+    recorrerPapeles(9)
+    Pos(15,1)
+    tirarPapeles
+  fin
+variables
+  robot1: tipo1
+  robot2: tipo2
+  robot3: tipo3
+  robot4: tipo4
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot4,area4)
+  Iniciar(robot1,1,75)
+  Iniciar(robot2,75,80)
+  Iniciar(robot3,70,10)
+  Iniciar(robot4,10,1)
+fin
