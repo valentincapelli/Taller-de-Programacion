@@ -26,37 +26,56 @@ procesos
       tomarPapel
       papeles := papeles + 1
   fin
-  proceso reposicionarseFlo
+  proceso reposicionarseFlo(ES flores:numero; E quien:numero)
   comenzar
-    derecha
+    juntarFlores(flores)
     mover
-  fin
-  proceso reposicionarsePap
-  comenzar
     izquierda
+    juntarFlores(flores)
+    BloquearEsquina(16,16)
     mover
+    EnviarMensaje(quien,robot3)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
   fin
-  proceso escalonInicialFlores(ES flores:numero)
+  proceso reposicionarsePap(ES papeles:numero; E quien:numero)
+  comenzar
+    mover
+    derecha
+    juntarPapeles(papeles)
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(quien,robot3)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso escalonInicialFlores(ES flores:numero; E long:numero)
+  comenzar
+    juntarFlores(flores)
+    repetir long
+      mover
+    juntarFlores(flores)
+    izquierda
+    repetir long
+      mover
+    derecha
+  fin
+  proceso recorridoInicialFlores(ES flores:numero; E quien:numero)
   variables
     long:numero
   comenzar
     long:= 5
-    repetir 5
-      juntarFlores(flores)
-      repetir long
-        mover
-      juntarFlores(flores)
-      izquierda
-      si (long = 1)
-        BloquearEsquina(15,15)
-      repetir long
-        mover
-      derecha
+    repetir 4
+      escalonInicialFlores(flores,long)
       long:= long - 1
-    reposicionarseFlo
-    LiberarEsquina(15,15)
+    juntarFlores(flores)
+    reposicionarseFlo(flores,quien)
   fin
-  proceso escalonFinalFlores(ES flores:numero)
+  proceso recorridoFinalFlores(ES flores:numero)
   variables
     long:numero
   comenzar
@@ -72,27 +91,28 @@ procesos
       derecha
       long:= long + 1
   fin
-  proceso escalonInicialPapeles(ES papeles:numero)
+  proceso escalonInicialPapeles(ES papeles:numero; E long:numero)
+  comenzar
+    juntarPapeles(papeles)
+    repetir long
+      mover
+    juntarPapeles(papeles)
+    derecha
+    repetir long
+      mover
+    izquierda
+  fin
+  proceso recorridoInicialPapeles(ES papeles:numero; E quien:numero)
   variables
     long:numero
   comenzar
     long:= 5
-    repetir 5
-      juntarPapeles(papeles)
-      repetir long
-        mover
-      juntarPapeles(papeles)
-      derecha
-      si (long = 1)
-        BloquearEsquina(15,15)
-      repetir long
-        mover
-      izquierda
+    repetir 4
+      escalonInicialPapeles(papeles,long)
       long:= long - 1
-    reposicionarsePap
-    LiberarEsquina(15,15)
+    reposicionarsePap(papeles,quien)
   fin
-  proceso escalonFinalPapeles(ES papeles:numero)
+  proceso recorridoFinalPapeles(ES papeles:numero)
   variables
     long:numero
   comenzar
@@ -117,9 +137,8 @@ robots
     flores,quien:numero
   comenzar
     RecibirMensaje(quien,robot3)
-    escalonInicialFlores(flores)
-    EnviarMensaje(quien,robot3)
-    escalonFinalFlores(flores)
+    recorridoInicialFlores(flores,quien)
+    recorridoFinalFlores(flores)
     Informar(flores)
     EnviarMensaje(V,robot3)
   fin
@@ -128,9 +147,8 @@ robots
     papeles,quien:numero
   comenzar
     RecibirMensaje(quien,robot3)
-    escalonInicialPapeles(papeles)
-    EnviarMensaje(quien,robot3)
-    escalonFinalPapeles(papeles)
+    recorridoInicialPapeles(papeles,quien)
+    recorridoFinalPapeles(papeles)
     Informar(papeles)
     EnviarMensaje(V,robot3)
   fin
