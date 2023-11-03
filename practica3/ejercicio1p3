@@ -64,47 +64,45 @@ areas
 robots
   robot floreros
   variables
-    reps,flores,av,ca,avInicio,caInicio:numero
+    flores,av,ca,avInicio,caInicio:numero
   comenzar
     avInicio:= PosAv
     caInicio:= PosCa
-    reps:= 0
     flores:= 0
-    mientras (reps < 5)
+    repetir 5
       calcularPosFloreros(av,ca)
       BloquearEsquina(av,ca)
       Pos(av,ca)
       juntarFlores(flores)
       Pos(avInicio,caInicio)
       LiberarEsquina(av,ca)
-      reps:= reps + 1
-    BloquearEsquina(10,10)
-    Pos(10,10)
-    depositarFlores
-    Pos(avInicio,caInicio)
-    LiberarEsquina(10,10)
+    repetir flores
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlor
+      Pos(avInicio,caInicio)
+      LiberarEsquina(10,10)
   fin
   robot papeleros
   variables
-    reps,papeles,av,ca,avInicio,caInicio:numero
+    papeles,av,ca,avInicio,caInicio:numero
   comenzar
     avInicio:= PosAv
     caInicio:= PosCa
-    reps:= 0
     papeles:= 0
-    mientras (reps < 3)
+    repetir 3
       calcularPosPapeleros(av,ca)
       BloquearEsquina(av,ca)
       Pos(av,ca)
       juntarPapeles(papeles)
       Pos(avInicio,caInicio)
       LiberarEsquina(av,ca)
-      reps:= reps + 1
-    BloquearEsquina(10,10)
-    Pos(10,10)
-    depositarPapeles
-    Pos(avInicio,caInicio)
-    LiberarEsquina(10,10)
+    repetir papeles
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarPapel
+      Pos(avInicio,caInicio)
+      LiberarEsquina(10,10)
   fin
 variables
   robot1:floreros
@@ -129,3 +127,4 @@ comenzar
   Iniciar(robot3,8,10)
   Iniciar(robot4,9,10)
 fin
+
