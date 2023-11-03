@@ -1,0 +1,99 @@
+5- Realice un programa en el que 4 robots juegan una carrera por avenidas diferentes: 4, 6,
+8 y 10 respectivamente. Todos los robots inician en la calle 1.
+Para poder avanzar, cada robot debe juntar un papel de una fuente de papeles localizada
+en la esquina (11,11), colocarlo en la esquina actual de su avenida y avanzar un paso.
+Cuando la esquina fuente ya no tiene más papeles, o cuando se haya completado la
+avenida, deberán avisar al robot coordinador y este determinará el robot que llegó más
+lejos.
+programa ejercicio5
+procesos
+  proceso agarrarUnPapel(ES continuar:boolean)
+  comenzar
+    si HayPapelEnLaEsquina
+      tomarPapel
+    sino
+      continuar:= F
+  fin
+areas
+  areapc: AreaPC(11,11,11,11)
+  area1: AreaP(4,1,4,100)
+  area2: AreaP(6,1,6,100)
+  area3: AreaP(8,1,8,100)
+  area4: AreaP(10,1,10,100)
+  area5: AreaP(1,1,1,1)
+robots
+  robot participante
+  variables
+    avActual,caActual,quien:numero
+    continuar:boolean
+  comenzar
+    avActual:= PosAv
+    caActual:= PosCa
+    continuar:= V
+    RecibirMensaje(quien,robotcoordinador)
+    mientras(continuar = V )
+      BloquearEsquina(11,11)
+      Pos(11,11)
+      agarrarUnPapel(continuar)
+      Pos(avActual,caActual)
+      LiberarEsquina(11,11)
+      si (continuar = V)
+        depositarPapel
+        mover
+        si (PosCa = 100)
+          continuar := F
+        sino
+          avActual:= PosAv
+          caActual:= PosCa
+    EnviarMensaje(quien,robotcoordinador)
+    EnviarMensaje(caActual,robotcoordinador)
+  fin
+  robot coordinador
+  variables
+    cant,max,maxr,quien:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+    max:= 0
+    repetir 4
+      RecibirMensaje(quien,*)
+      si (quien = 1)
+        RecibirMensaje(cant,robot1)
+      sino
+        si (quien = 2)
+          RecibirMensaje(cant,robot2)
+        sino
+          si (quien = 3)
+            RecibirMensaje(cant,robot3)
+          sino
+            RecibirMensaje(cant,robot4)
+      si (cant > max)
+        max:= cant
+        maxr:= quien
+    Informar(maxr)
+  fin
+
+variables
+  robot1:participante
+  robot2:participante
+  robot3:participante
+  robot4:participante
+  robotcoordinador:coordinador
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areapc)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areapc)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areapc)
+  AsignarArea(robot4,area4)
+  AsignarArea(robot4,areapc)
+  AsignarArea(robotcoordinador,area5)
+  Iniciar(robot1,4,1)
+  Iniciar(robot2,6,1)
+  Iniciar(robot3,8,1)
+  Iniciar(robot4,10,1)
+  Iniciar(robotcoordinador,1,1)
+fin

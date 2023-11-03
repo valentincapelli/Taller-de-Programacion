@@ -1,0 +1,188 @@
+programa ejercicio6C
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso cuadradoTipo1(E long:numero; ES flores:numero)
+  comenzar
+    repetir 2
+      repetir long
+        juntarFlores(flores)
+        si (PosAv = 8)&(PosCa = 6)
+          BloquearEsquina(8,5)
+        mover
+        si (PosAv = 8)& (PosCa = 4)
+          LiberarEsquina(8,5)
+      derecha
+      repetir long
+        juntarFlores(flores)
+        si (PosAv = 4)&(PosCa = 8)
+          BloquearEsquina(5,8)
+        mover
+        si (PosAv = 6)& (PosCa = 8)
+          LiberarEsquina(5,8)
+      derecha
+  fin
+  proceso cuadradoTipo2(E long:numero; ES flores:numero; ES papeles:numero)
+  comenzar
+    repetir 2
+      repetir long
+        juntarFlores(flores)
+        juntarPapeles(papeles)
+        si (PosAv = 5)&(PosCa = 7)
+          BloquearEsquina(5,8)
+        si (PosAv = 15)&(PosCa = 10)
+          BloquearEsquina(15,9)
+        mover
+        si (PosAv = 5)& (PosCa = 9)
+          LiberarEsquina(5,8)
+        si (PosAv = 15)& (PosCa = 8)
+          LiberarEsquina(15,9)
+      derecha
+      repetir long
+        juntarFlores(flores)
+        juntarPapeles(papeles)
+        si (PosAv = 8)&(PosCa = 15)
+          BloquearEsquina(9,15)
+        si (PosAv = 9)& (PosCa = 5)
+          BloquearEsquina(8,5)
+        mover
+        si (PosAv = 10)& (PosCa = 15)
+          LiberarEsquina(9,15)
+        si (PosAv = 7) & (PosCa = 5)
+          LiberarEsquina(8,5)
+      derecha
+  fin
+  proceso cuadradoTipo3(E long:numero; ES papeles:numero)
+  comenzar
+    repetir 2
+      repetir long
+        juntarPapeles(papeles)
+        si (PosAv = 8)&(PosCa = 15)
+          BloquearEsquina(9,15)
+        mover
+        si (PosAv = 10)& (PosCa = 15)
+          LiberarEsquina(9,15)
+      derecha
+      repetir long
+        juntarPapeles(papeles)
+        si (PosAv = 15)&(PosCa = 10)
+          BloquearEsquina(15,9)
+        mover
+        si (PosAv = 15)& (PosCa = 8)
+          LiberarEsquina(15,9)
+      derecha
+  fin
+  proceso recorrerCalleFlo
+  comenzar
+    mientras (HayFlorEnLaBolsa)&(PosAv < 100)
+      depositarFlor
+      mover
+  fin
+  proceso depositar
+  comenzar
+    si HayFlorEnLaBolsa
+      depositarFlor
+    si HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso recorrerCalleFloPap
+  comenzar
+    mientras (PosAv < 100)& ((HayFlorEnLaBolsa)|(HayPapelEnLaBolsa))
+      depositar
+      mover
+  fin
+  proceso recorrerCallePap
+  comenzar
+    mientras (HayPapelEnLaBolsa)&(PosAv < 100)
+      depositarPapel
+      mover
+  fin
+areas
+  area1:AreaC(1,1,100,100)
+robots
+  robot tipo1
+  variables
+    long,quien,flores,ca:numero
+  comenzar
+    long:= 6
+    RecibirMensaje(quien,robotjefe)
+    cuadradoTipo1(long,flores)
+    EnviarMensaje(quien,robotjefe)
+    RecibirMensaje(ca,robotjefe)
+    Pos(1,ca)
+    derecha
+    recorrerCalleFlo
+  fin
+  robot tipo2
+  variables
+    long,quien,flores,papeles,ca:numero
+  comenzar
+    long:= 10
+    RecibirMensaje(quien,robotjefe)
+    cuadradoTipo2(long,flores,papeles)
+    EnviarMensaje(quien,robotjefe)
+    RecibirMensaje(ca,robotjefe)
+    Pos(1,ca)
+    derecha
+    recorrerCalleFloPap
+  fin
+  robot tipo3
+  variables
+    long,quien,papeles,ca:numero
+  comenzar
+    long:= 7
+    RecibirMensaje(quien,robotjefe)
+    cuadradoTipo3(long,papeles)
+    EnviarMensaje(quien,robotjefe)
+    RecibirMensaje(ca,robotjefe)
+    Pos(1,ca)
+    derecha
+    recorrerCallePap
+  fin
+  robot jefe
+  variables
+    ca,quien,ca1,ca2,ca3:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    ca:= 20
+    repetir 3
+      RecibirMensaje(quien,*)
+      si (quien = 1)
+        ca1:= ca
+      sino
+        si (quien = 2)
+          ca2:= ca
+        sino
+          ca3:= ca
+      ca:= ca + 1
+    EnviarMensaje(ca1,robot1)
+    EnviarMensaje(ca2,robot2)
+    EnviarMensaje(ca3,robot3)
+  fin
+variables
+  robot1:tipo1
+  robot2:tipo2
+  robot3:tipo3
+  robotjefe:jefe
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area1)
+  AsignarArea(robot3,area1)
+  AsignarArea(robotjefe,area1)
+  Iniciar(robot1,2,2)
+  Iniciar(robot2,5,5)
+  Iniciar(robot3,9,9)
+  Iniciar(robotjefe,1,1)
+fin
