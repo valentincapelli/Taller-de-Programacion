@@ -1,0 +1,83 @@
+programa ejercicio2
+procesos
+  proceso juntarPapeles(ES papeles:numero; E limite:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina) & (papeles < limite)
+      tomarPapel
+      papeles := papeles + 1
+  fin
+  proceso depositarPapeles
+  comenzar
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso juntarPapelesRandom(E cantrandom:numero; ES suficiente:boolean)
+  variables
+    papeles:numero
+  comenzar
+    papeles:= 0
+    juntarPapeles(papeles,cantrandom)
+    si (papeles = cantrandom)
+      suficiente:= V
+    sino
+      depositarPapeles
+      suficiente:= F
+  fin
+areas
+  area1:AreaC(1,1,100,100)
+robots
+  robot productor
+  variables
+    papeles,avActual,caActual:numero
+  comenzar
+    papeles:= 0
+    mientras (PosCa < 100)
+      mientras HayPapelEnLaEsquina
+        juntarPapeles(papeles,5)
+        si (papeles = 5)
+          avActual:= PosAv
+          caActual:= PosCa
+          BloquearEsquina(50,50)
+          Pos(50,50)
+          depositarPapeles
+          Pos(avActual,caActual)
+          LiberarEsquina(50,50)
+          papeles:= 0
+      mover
+  fin
+  robot consumidor
+  variables
+    cantrandom,avOrigen,caOrigen,intentos:numero
+    suficiente:boolean
+  comenzar
+    avOrigen:= PosAv
+    caOrigen:= PosCa
+    intentos:= 0
+    mientras (intentos < 9)
+      Random(cantrandom,2,5)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      juntarPapelesRandom(cantrandom,suficiente)  {junta la cant random de papeles y me devuelve si consigio esa cant o no}
+      Pos(avOrigen,caOrigen)
+      LiberarEsquina(50,50)
+      si (suficiente = F)
+        intentos:= intentos + 1
+      sino
+        intentos:= 0
+        depositarPapeles
+  fin
+variables
+  robotP1:productor
+  robotP2:productor
+  robotC1:consumidor
+  robotC2:consumidor
+comenzar
+  AsignarArea(robotP1,area1)
+  AsignarArea(robotP2,area1)
+  AsignarArea(robotC1,area1)
+  AsignarArea(robotC2,area1)
+  Iniciar(robotP1,5,1)
+  Iniciar(robotP2,10,1)
+  Iniciar(robotC1,11,1)
+  Iniciar(robotC2,12,1)
+fin
