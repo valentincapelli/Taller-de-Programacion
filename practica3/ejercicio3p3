@@ -41,19 +41,17 @@ robots
     RecibirMensaje(quien,robotjefe)
     RecibirMensaje(av,robotjefe)
     RecibirMensaje(ca,robotjefe)
-    RecibirMensaje(continuar,robotjefe)
+    continuar:= V
     mientras (continuar = V)
       BloquearEsquina(av,ca)
       Pos(av,ca)
       si HayFlorEnLaEsquina
         tomarFlor
         flores:= flores+1
-        EnviarMensaje(V,robotjefe)
       sino
-        EnviarMensaje(F,robotjefe)
+        continuar:= F
       Pos(avInicial,caInicial)
       LiberarEsquina(av,ca)
-      RecibirMensaje(continuar,robotjefe)
     EnviarMensaje(quien,robotjefe)
     EnviarMensaje(flores,robotjefe)
   fin
@@ -75,23 +73,6 @@ robots
     EnviarMensaje(ca,robot3)
     EnviarMensaje(av,robot4)
     EnviarMensaje(ca,robot4)
-    continuar:= V
-    mientras (continuar = V)
-      EnviarMensaje(V,robot1)
-      RecibirMensaje(continuar,robot1)
-      si (continuar = V)
-        EnviarMensaje(V,robot2)
-        RecibirMensaje(continuar,robot2)
-        si (continuar = V)
-          EnviarMensaje(V,robot3)
-          RecibirMensaje(continuar,robot3)
-          si(continuar = V)
-            EnviarMensaje(V,robot4)
-            RecibirMensaje(continuar,robot4)
-    EnviarMensaje(F,robot1)
-    EnviarMensaje(F,robot2)
-    EnviarMensaje(F,robot3)
-    EnviarMensaje(F,robot4)
     max:= 0
     repetir 4
       RecibirMensaje(quien,*)
