@@ -1,18 +1,18 @@
-{3. SincronizaciÃƒÆ’Ã‚Â³n barrera
+{3. SincronizaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n barrera
 Tres robots deben vaciar de papeles su avenida, comenzando por la calle 1 y terminando en
 la calle 100. El trabajo lo deben realizar todos juntos y en etapas: los robots inician juntos y
 cuando todos completan una etapa del trabajo pueden avanzar a la siguiente, lo que
 significa que para poder pasar de etapa los robots deben esperar que todos hayan
 completado la etapa en curso. Se proponen dos posibles soluciones a este problema:
-etapas homogÃƒÆ’Ã‚Â©neas o etapas heterogÃƒÆ’Ã‚Â©neas:
+etapas homogÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©neas o etapas heterogÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©neas:
 a) Implemente el programa considerando que cada robot completa una etapa cada 5
 esquinas
 b) Implemente el programa considerando que cada robot completa una etapa luego de
 juntar N papeles. El valor de N (entre 1 y 5) lo calcula cada robot antes de iniciar
 cada etapa.
-En cada soluciÃƒÆ’Ã‚Â³n, analice cÃƒÆ’Ã‚Â³mo deberÃƒÆ’Ã‚Â­a finalizar el programa.
+En cada soluciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n, analice cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³mo deberÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a finalizar el programa.
 Los robots inician en las esquinas (1,1), (2,1) y (3,1) respectivamente. Existe un robot
-coordinador, cuya ÃƒÆ’Ã‚Âºnica tarea es asignar identificadores a cada robot.}
+coordinador, cuya ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºnica tarea es asignar identificadores a cada robot.}
 
 programa ejercicio3
 procesos
@@ -40,10 +40,9 @@ robots
     randomPapeles,quien:numero
     continuar,continuar1,continuar2:boolean
   comenzar
-    continuar1:= V
-    continuar2:= V
+    continuar:= V
     RecibirMensaje(quien,robotjefe)
-    mientras (continuar1 = continuar2) & (PosCa < 100)
+    mientras (continuar = V) & (PosCa < 100)
       Random(randomPapeles,1,5)
       etapa(randomPapeles)
       continuar:= (PosCa < 100)
@@ -57,8 +56,12 @@ robots
         sino
           EnviarMensaje(continuar,robot1)
           EnviarMensaje(continuar,robot2)
-      RecibirMensaje(continuar1,*)
-      RecibirMensaje(continuar2,*)
+      RecibirMensaje(continuar,*)
+      si (continuar = F)
+        RecibirMensaje(continuar,*)
+        continuar:= F
+      sino
+        RecibirMensaje(continuar,*)
   fin
   robot jefe
   comenzar
