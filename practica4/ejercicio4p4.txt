@@ -1,0 +1,108 @@
+{4. Jefe y trabajadores - Master/Slave
+Un robot jefe asigna tareas a los trabajadores. Las tareas consisten en 1. recoger flores, 2.
+recoger papeles, 3. vaciar bolsa, 4. finalizar .
+Existen 2 robots trabajadores que reciben solicitudes de tareas del robot jefe. Para cada
+solicitud, reciben la tarea y la esquina donde deben realizarla (salvo cuando la tarea es 4
+que no deben acceder a una esquina). Luego de recibir la tarea, los robots van a la esquina
+indicada, realizan la tarea, avisan al jefe que ya la completaron y quedan a la espera de una
+nueva tarea.
+El robot jefe inicia en la esquina (1,1) y los robots trabajadores inician en las esquinas (2,1)
+y (3,1). Las tareas se asignan aleatoriamente a cualquier esquina dentro del cuadrante
+comprendido entre las esquinas (2,2) y (100,100). El robot jefe envi­a 10 tareas aleatorias a
+trabajadores aleatorios y termina.
+Analice: existe el riesgo de que el programa quede bloqueado, y que ningÃºn robot
+trabajador pueda realizar su tarea. Â¿en quÃ© caso puede suceder esto? Â¿quÃ© resulta
+necesario considerar para evitar esta situaciÃ³n?}
+
+programa ejercicio3
+procesos
+  proceso juntarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso juntarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso vaciarBolsa
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso calcularEsquina(ES av:numero; ES ca:numero)
+  variables
+    auxav,auxca:numero
+  comenzar
+    Random(auxav,2,100)
+    av:= auxav
+    Random(auxca,2,100)
+    ca:= auxca
+  fin
+areas
+  areapc:AreaPC(1,2,100,100)
+  areajefe:AreaC(1,1,1,1)
+  area1:AreaC(2,1,2,1)
+  area2:AreaC(3,1,3,1)
+robots
+  robot trabajador
+  variables
+    tarea,quien,ca,av:numero
+  comenzar
+    RecibirMensaje(quien,robotjefe)
+    RecibirMensaje(tarea,robotjefe)
+    mientras (tarea <> 4)
+      RecibirMensaje(av,robotjefe)
+      RecibirMensaje(ca,robotjefe)
+      Pos(av,ca)
+      si (tarea = 1)
+        juntarFlores
+      sino
+        si (tarea = 2)
+          juntarPapeles
+        sino
+          vaciarBolsa
+      EnviarMensaje(V,robotjefe)
+      RecibirMensaje(tarea,robotjefe)
+  fin
+  robot jefe
+  variables
+    quien,tarea,av,ca:numero
+    continua:boolean
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    repetir 10
+      Random(quien,1,2)
+      Random(tarea,1,3)
+      calcularEsquina(av,ca)
+      si (quien = 1)
+        EnviarMensaje(tarea,robot1)
+        EnviarMensaje(av,robot1)
+        EnviarMensaje(ca,robot1)
+      sino
+        EnviarMensaje(tarea,robot2)
+        EnviarMensaje(av,robot2)
+        EnviarMensaje(ca,robot2)
+      RecibirMensaje(continua,*)
+    tarea:= 4
+    EnviarMensaje(tarea,robot1)
+    EnviarMensaje(tarea,robot2)
+  fin
+variables
+  robot1:trabajador
+  robot2:trabajador
+  robotjefe:jefe
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areapc)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areapc)
+  AsignarArea(robotjefe,areajefe)
+  Iniciar(robotjefe,1,1)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,3,1)
+fin
