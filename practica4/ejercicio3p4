@@ -44,8 +44,6 @@ robots
       si (quien = 1)
         EnviarMensaje(V,robot2)
         EnviarMensaje(V,robot3)
-        RecibirMensaje(continuar,*)
-        RecibirMensaje(continuar,*)
       sino
         si (quien = 2)
           EnviarMensaje(V,robot1)
