@@ -1,0 +1,91 @@
+{3- Dos robots recolectores avanzan por las calles 3 y 4 respectivamente juntando todas las
+flores a su paso. Cada esquina tiene a lo sumo una flor. Cada vez que juntan 10 flores o que
+avanzan 5 esquinas, deberÃƒÆ’Ã‚Â¡n vaciar de flores su bolsa en el depÃƒÆ’Ã‚Â³sito localizado en la
+esquina (10,10).
+Cada vez que se depositan flores en el depÃƒÆ’Ã‚Â³sito, un robot cosechador deberÃƒÆ’Ã‚Â¡ juntar dichas
+flores.
+Cuando ambos recolectores hayan completado sus calles, el robot cosechador deberÃƒÆ’Ã‚Â¡
+informar la cantidad de flores recolectadas.
+Los recolectores inician en la esquina (1,3) y (1,4), y el cosechador en la esquina (1,5)}
+
+programa nombre
+procesos
+  proceso juntarFloresLimite(ES flores:numero; E limite:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina) & (flores < limite)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  proceso etapa(ES flores:numero)
+  variables
+    limite:numero
+  comenzar
+    limite:= 10
+    mientras (PosAv < 100) & (flores < limite)
+      juntarFloresLimite(flores,limite)
+      si (flores < limite) & (PosAv < 100)
+        mover
+  fin
+  proceso depositarFlores
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+  fin
+areas
+  area1: AreaC(1,1,100,100)
+robots
+  robot recolector
+  variables
+    flores,av,ca:numero
+  comenzar
+    flores:= 0
+    derecha
+    mientras (PosAv < 100)
+      etapa(flores)
+      av:= PosAv
+      ca:= PosCa
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlores
+      Pos(av,ca)
+      LiberarEsquina(10,10)
+      EnviarMensaje(V,robotcosechador)
+    EnviarMensaje(F,robotcosechador)
+  fin
+  robot cosechador
+  variables
+    restan,flores:numero
+    accede:boolean
+  comenzar
+    restan:= 2
+    flores:= 0
+    RecibirMensaje(accede,*)
+    mientras (restan > 0)
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      juntarFlores(flores)
+      Pos(1,5)
+      LiberarEsquina(10,10)
+      RecibirMensaje(accede,*)
+      si (accede = F)
+        restan:= restan - 1
+    Informar(flores)
+  fin
+variables
+  robot1: recolector
+  robot2: recolector
+  robotcosechador: cosechador
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area1)
+  AsignarArea(robotcosechador,area1)
+  Iniciar(robot1,1,3)
+  Iniciar(robot2,1,4)
+  Iniciar(robotcosechador,1,5)
+fin

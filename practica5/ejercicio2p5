@@ -1,0 +1,85 @@
+{2- Tres robots recolectores deben avanzar por su calle vaciando las esquinas. El avance
+debe realizarse en conjunto en etapas, siguiendo el modelo de sincronizaciÃƒÆ’Ã‚Â³n barrera, en el
+cual los robots deben esperar que todos terminen su tarea antes de avanzar a la siguiente
+etapa. Cada etapa consiste en recorrer 10 esquinas y luego depositar todas las flores
+recolectadas en la esquina (50,50). Una vez que los robots recolectores completaron toda
+su calle, un robot fiscalizador deberÃƒÆ’Ã‚Â¡ juntar todas las flores de la esquina (50,50) e informar
+la cantidad total de flores juntadas. Los robots recolectores inician en las esquinas (1,1),
+(1,2) y (1,3) respectivamente. El robot fiscalizador inicia en la esquina (1,4).}
+
+programa nombre
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores + 1
+  fin
+  proceso etapa(ES flores:numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+  fin
+  proceso depositar(E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  area1: AreaC(1,1,100,100)
+robots
+  robot recolector
+  variables
+    continuar:boolean
+    flores,av,ca:numero
+  comenzar
+    flores:= 0
+    derecha
+    repetir 11
+      etapa(flores)
+      juntarFlores(flores)  { para la ultima esquina de cada recorrido}
+      av:= PosAv
+      ca:= PosCa
+      depositar(av,ca)
+      EnviarMensaje(V,robotjefe)
+      RecibirMensaje(continuar,robotjefe)
+    {EnviarMensaje(1,robotjefe)}
+  fin
+  robot fiscalizador
+  variables
+    flores:numero
+    continuar:boolean
+  comenzar
+    repetir 11
+      repetir 3
+        RecibirMensaje(continuar,*)
+      EnviarMensaje(V,robot1)
+      EnviarMensaje(V,robot2)
+      EnviarMensaje(V,robot3)
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    juntarFlores(flores)
+    Pos(1,4)
+    LiberarEsquina(50,50)
+    Informar(flores)
+  fin
+variables
+  robot1: recolector
+  robot2: recolector
+  robot3: recolector
+  robotjefe: fiscalizador
+comenzar
+  AsignarArea(robot1, area1)
+  AsignarArea(robot2, area1)
+  AsignarArea(robot3, area1)
+  AsignarArea(robotjefe, area1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,1,2)
+  Iniciar(robot3,1,3)
+  Iniciar(robotjefe,4,4)
+fin
