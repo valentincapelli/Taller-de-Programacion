@@ -1,0 +1,90 @@
+{5- Existe un robot servidor que tiene su bolsa con papeles. Tres robots clientes tienen 4
+intentos cada uno para solicitar al servidor que les entregue papeles. Cada vez que el
+servidor recibe un pedido de papeles de un cliente, se ubicarÃ¡ en la esquina (100,1),
+colocarÃ¡ allÃ­ una cantidad aleatoria de papeles (entre 1 y 5) y avisarÃ¡ al cliente
+correspondiente la cantidad de papeles que le depositÃ³.
+Una vez que un cliente recibe un aviso, deberÃ¡ recolectar uno a uno los papeles que le
+corresponden y depositarlos en su esquina inicial.
+El programa finalizarÃ¡ cuando todos los clientes hayan completado todos sus intentos.
+Asuma que el servidor tiene los papeles suficientes para cubrir todas las solicitudes.
+Los robots clientes inician en las esquinas (10,1), (11,1) y (12,1), y el robot servidor inicia en
+la esquina (13,1).}
+
+programa nombre
+procesos
+  proceso BusquedaDePapeles(E cantrandom:numero; E avOrigen:numero; E caOrigen:numero)
+  comenzar
+    repetir cantrandom
+      Pos(100,1)
+      tomarPapel
+      Pos(avOrigen,caOrigen)
+      depositarPapel
+  fin
+  proceso depositarPapeles(E cant:numero)
+  comenzar
+    repetir cant
+      depositarPapel
+  fin
+areas
+  area1: AreaP(10,1,10,1)
+  area2: AreaP(11,1,11,1)
+  area3: AreaP(12,1,12,1)
+  areajefe: AreaP(13,1,13,1)
+  areac: AreaC(100,1,100,1)
+robots
+  robot servidor
+  variables
+    quien,cantrandom:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    repetir 12
+      RecibirMensaje(quien,*)
+      Random(cantrandom,1,5)
+      BloquearEsquina(100,1)
+      Pos(100,1)
+      depositarPapeles(cantrandom)
+      Pos(13,1)
+      LiberarEsquina(100,1)
+      si (quien = 1)
+        EnviarMensaje(cantrandom,robot1)
+      sino
+        si (quien = 2)
+          EnviarMensaje(cantrandom,robot2)
+        sino
+          EnviarMensaje(cantrandom,robot3)
+  fin
+  robot cliente
+  variables
+    quien,cantrandom,avOrigen,caOrigen:numero
+  comenzar
+    avOrigen:= PosAv
+    caOrigen:= PosCa
+    RecibirMensaje(quien,robotjefe)
+    repetir 4
+      EnviarMensaje(quien,robotjefe)
+      RecibirMensaje(cantrandom,robotjefe)
+      BloquearEsquina(100,1)
+      BusquedaDePapeles(cantrandom,avOrigen,caOrigen)
+      LiberarEsquina(100,1)
+  fin
+variables
+  robot1: cliente
+  robot2: cliente
+  robot3: cliente
+  robotjefe: servidor
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areac)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areac)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areac)
+  AsignarArea(robotjefe,areajefe)
+  AsignarArea(robotjefe,areac)
+  Iniciar(robot1,10,1)
+  Iniciar(robot2,11,1)
+  Iniciar(robot3,12,1)
+  Iniciar(robotjefe,13,1)
+fin
