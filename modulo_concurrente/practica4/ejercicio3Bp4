@@ -1,0 +1,86 @@
+{3. SincronizaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n barrera
+Tres robots deben vaciar de papeles su avenida, comenzando por la calle 1 y terminando en
+la calle 100. El trabajo lo deben realizar todos juntos y en etapas: los robots inician juntos y
+cuando todos completan una etapa del trabajo pueden avanzar a la siguiente, lo que
+significa que para poder pasar de etapa los robots deben esperar que todos hayan
+completado la etapa en curso. Se proponen dos posibles soluciones a este problema:
+etapas homogÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©neas o etapas heterogÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©neas:
+a) Implemente el programa considerando que cada robot completa una etapa cada 5
+esquinas
+b) Implemente el programa considerando que cada robot completa una etapa luego de
+juntar N papeles. El valor de N (entre 1 y 5) lo calcula cada robot antes de iniciar
+cada etapa.
+En cada soluciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n, analice cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³mo deberÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­a finalizar el programa.
+Los robots inician en las esquinas (1,1), (2,1) y (3,1) respectivamente. Existe un robot
+coordinador, cuya ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âºnica tarea es asignar identificadores a cada robot.}
+
+programa ejercicio3
+procesos
+  proceso juntarPapelesLimite(E limite: numero; ES papeles: numero)
+  comenzar
+    mientras((HayPapelEnLaEsquina) & (papeles <> limite))
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  proceso etapa(ES cantrandom:numero)
+  variables
+    papeles:numero
+  comenzar
+    papeles:= 0
+    mientras ((papeles <> cantrandom) & (PosCa < 100))
+      juntarPapelesLimite(cantrandom,papeles)
+      si (papeles <> cantrandom)
+        mover
+  fin
+areas
+  area1:AreaC(1,1,100,100)
+robots
+  robot tipo1
+  variables
+    randomPapeles,quien:numero
+    continuar,continuar1,continuar2:boolean
+  comenzar
+    continuar:= V
+    RecibirMensaje(quien,robotjefe)
+    mientras (continuar = V) & (PosCa < 100)
+      Random(randomPapeles,1,5)
+      etapa(randomPapeles)
+      continuar:= (PosCa < 100)
+      si (quien = 1)
+        EnviarMensaje(continuar,robot2)
+        EnviarMensaje(continuar,robot3)
+      sino
+        si (quien = 2)
+          EnviarMensaje(continuar,robot1)
+          EnviarMensaje(continuar,robot3)
+        sino
+          EnviarMensaje(continuar,robot1)
+          EnviarMensaje(continuar,robot2)
+      RecibirMensaje(continuar,*)
+      si (continuar = F)
+        RecibirMensaje(continuar,*)
+        continuar:= F
+      sino
+        RecibirMensaje(continuar,*)
+  fin
+  robot jefe
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+  fin
+variables
+  robot1:tipo1
+  robot2:tipo1
+  robot3:tipo1
+  robotjefe:jefe
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot2,area1)
+  AsignarArea(robot3,area1)
+  AsignarArea(robotjefe,area1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+  Iniciar(robotjefe,10,1)
+fin
