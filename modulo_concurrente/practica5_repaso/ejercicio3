@@ -1,0 +1,80 @@
+programa ejercicio3
+procesos
+  proceso depositar(E flores : numero)
+  variables
+    av, va : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(10,10)
+    EnviarMensaje(robotjefe, V)
+  fin
+
+  proceso cosechar(ES flores : numero)
+  variables
+    av, ca : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+    Pos(av,ca)
+    LiberarEsquina(10,10)
+  fin
+
+areas
+  ciudad : AreaC(1, 1, 100, 100)
+robots
+  robot recolector
+  variables
+    esquinas, flores : numero
+  comenzar
+    derecha
+    mientras (PosAv < 100)
+      esquinas := 0
+      flores := 0
+      mientras (esquinas < 5) & (flores < 10) & (PosAv < 100)
+        esquinas :=  esquinas + 1
+        tomarFlor
+        flores := flores + 1
+        mover
+      depositar(flores)
+    EnviarMensaje(robotjefe, F)
+  fin
+
+  robot cosechador
+  variables
+    ok : boolean
+    cant, flores : numero
+  comenzar
+    flores := 0
+    cant := 0
+    mientras (cant < 2)
+      RecibirMensaje(ok, *)
+      si (ok = V)
+        cosechar(flores)
+      sino
+        cant := cant + 1
+    Informar(flores)
+  fin
+
+variables
+  robot1 : recolector
+  robot2 : recolector
+  robotjefe : cosechador
+comenzar
+  AsignarArea(robot1, ciudad)
+  AsignarArea(robot2, ciudad)
+  AsignarArea(robotjefe, ciudad)
+  Iniciar(robot1, 1, 3)
+  Iniciar(robot2, 1, 4)
+  Iniciar(robotjefe, 1, 5)
+fin

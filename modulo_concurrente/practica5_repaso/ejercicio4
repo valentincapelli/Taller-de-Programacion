@@ -1,0 +1,120 @@
+programa ejercicio4
+procesos
+  proceso buscarFlores(ES flores : numero; E av : numero; E ca : numero)
+  variables
+    avOrigen, caOrigen : numero
+  comenzar
+    avOrigen := PosAv
+    caOrigen := PosCa
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+    Pos(avOrigen,caOrigen)
+    LiberarEsquina(av,ca)
+  fin
+
+  proceso depositarFlores(E flores : numero)
+  variables
+    av, ca : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(10,10)
+  fin
+
+  proceso calcularEsquina(ES av : numero; ES ca : numero)
+  variables
+    aux : numero
+  comenzar
+    Random(aux, 40, 60)
+    av := aux
+    Random(aux, 40, 60)
+    ca := aux
+  fin
+
+areas
+  area1: AreaP(1,1,1,1)
+  area2: AreaP(2,1,2,1)
+  area3: AreaP(3,1,3,1)
+  areajefe: AreaP(4,1,4,1)
+  areac: AreaC(10,10,10,10)
+  areapc: AreaPC(40,40,60,60)
+robots
+  robot florero
+  variables
+    intentos, flores, quien, av, ca : numero
+  comenzar
+    intentos := 8
+    flores := 0
+    RecibirMensaje(quien, robotjefe)
+    mientras (intentos > 0)
+      EnviarMensaje(V, robotjefe)
+      EnviarMensaje(quien, robotjefe)
+      RecibirMensaje(av, robotjefe)
+      RecibirMensaje(ca, robotjefe)
+      buscarFlores(flores, av, ca)
+      intentos := intentos - 1
+    depositarFlores(flores)
+    EnviarMensaje(F, robotjefe)
+  fin
+
+  robot fiscalizador
+  variables
+    flores, cant, av, ca, quien : numero
+    ok : boolean
+  comenzar
+    flores := 0
+    cant := 0
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    mientras (cant < 3)
+      calcularEsquina(av,ca)
+      RecibirMensaje(ok, *)
+      si (ok = F)
+        cant := cant + 1
+      sino
+        RecibirMensaje(quien, *)
+        si (quien = 1)
+          EnviarMensaje(av, robot1)
+          EnviarMensaje(ca, robot1)
+        sino
+          si (quien = 2)
+            EnviarMensaje(av, robot2)
+            EnviarMensaje(ca, robot2)
+          sino
+            EnviarMensaje(av, robot3)
+            EnviarMensaje(ca, robot3)
+    buscarFlores(flores, 10, 10)
+    Informar(flores)
+  fin
+
+variables
+  robot1 : florero
+  robot2 : florero
+  robot3 : florero
+  robotjefe : fiscalizador
+comenzar
+  AsignarArea(robot1,area1)
+  AsignarArea(robot1,areapc)
+  AsignarArea(robot1,areac)
+  AsignarArea(robot2,area2)
+  AsignarArea(robot2,areapc)
+  AsignarArea(robot2,areac)
+  AsignarArea(robot3,area3)
+  AsignarArea(robot3,areapc)
+  AsignarArea(robot3,areac)
+  AsignarArea(robotjefe,areajefe)
+  AsignarArea(robotjefe,areac)
+  Iniciar(robot1, 1, 1)
+  Iniciar(robot2, 2, 1)
+  Iniciar(robot3, 3, 1)
+  Iniciar(robotjefe, 4, 1)
+fin

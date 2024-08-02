@@ -1,0 +1,129 @@
+programa ejercicio1
+procesos
+
+  proceso juntarPapeles(ES papeles : numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles = papeles + 1
+  fin
+
+  proceso juntarFlores(ES flores : numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores = flores + 1
+  fin
+
+  proceso recorridoPapeles(ES papeles : numero)
+  comenzar
+    juntarPapeles(papeles)
+    BloquearEsquina(PosAv+1, PosCa)
+    mover
+    juntarPapeles(papeles)
+    BloquearEsquina(PosAv+1, PosCa)
+    mover
+    LiberarEsquina(PosAv-1, PosCa)
+    juntarPapeles(papeles)
+    mover
+    LiberarEsquina(PosAv-1, PosCa)
+    repetir 96
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+    fin
+
+  proceso recorridoFlores(ES flores : numero)
+  comenzar
+    repetir 96
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+    BloquearEsquina(PosAv, PosCa+1)
+    mover
+    juntarFlores(flores)
+    BloquearEsquina(PosAv, PosCa+1)
+    mover
+    LiberarEsquina(PosAv, PosCa-1)
+    juntarFlores(flores)
+    mover
+    LiberarEsquina(PosAv, PosCa-1)
+    juntarFlores(flores)
+  fin
+
+areas
+  ciudad1:AreaC(1,1,100,100)
+robots
+  robot rojo {equipo rojo equipo 1}
+  variables
+    flores, quien : numero
+  comenzar
+    flores := 0
+    RecibirMensaje(quien, robotjefe)
+    recorridoFlores(flores)
+    EnviarMensaje(quien, robotjefe)
+    EnviarMensaje(flores, robotjefe)
+  fin
+
+  robot azul {equipo azul equipo 2}
+  variables
+    papeles, quien : numero
+  comenzar
+    derecha
+    papeles := 0
+    RecibirMensaje(quien, robotjefe)
+    recorridoPapeles(papeles)
+    EnviarMensaje(quien, robotjefe)
+    EnviarMensaje(papeles, robotjefe)
+  fin
+
+  robot fiscalizador
+  variables
+    quien, cantFlores, cantPapeles, cant : numero
+  comenzar
+    EnviarMensaje(1, robotR1);
+    EnviarMensaje(11, robotR11);
+    EnviarMensaje(2, robotA2);
+    EnviarMensaje(22, robotA22);
+    cantFlores = 0
+    cantPapeles = 0;
+    repetir 4
+      RecibirMensaje(quien, *)
+      si (quien = 1)
+        RecibirMensaje(cant, robotR1)
+        cantFlores = cantFlores + cant
+      sino
+        si (quien == 11)
+          RecibirMensaje(cant, robotR11)
+          cantFlores = cantFlores + cant
+        sino
+          si (quien = 2)
+            RecibirMensaje(cant, robotA2)
+            cantPapeles:= cantPapeles + cant
+          sino
+            si (quien = 22)
+              RecibirMensaje(cant, robotA22)
+              cantPapeles:= cantPapeles + cant
+    si (cantFlores > cantPapeles)
+      Informar(1)
+    sino
+      Informar(2)
+  fin
+
+variables
+  robotR1 : rojo
+  robotR11 : rojo
+  robotA2 : azul
+  robotA22 : azul
+  robotjefe : fiscalizador
+comenzar
+  AsignarArea(robotR1, ciudad1)
+  AsignarArea(robotR11, ciudad1)
+  AsignarArea(robotA2, ciudad1)
+  AsignarArea(robotA22, ciudad1)
+  Iniciar(robotjefe, 1, 1)
+  Iniciar(robotR1, 2, 1)
+  Iniciar(robotR11,3,1)
+  Iniciar(robotA2,1,98)
+  Iniciar(robotA22,1,99)
+fin

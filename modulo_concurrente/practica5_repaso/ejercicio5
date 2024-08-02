@@ -1,0 +1,92 @@
+programa ejercicio5
+procesos
+  proceso recolectar1A1(E cant : numero)
+  variables
+    av, ca : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    repetir cant
+      BloquearEsquina(100,1)
+      Pos(100,1)
+      tomarPapel
+      Pos(av,ca)
+      LiberarEsquina(100,1)
+      depositarPapel
+  fin
+
+  proceso depositarPapeles(E cantPapeles : numero)
+  variables
+    av, ca : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    repetir cantPapeles
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(100,1)
+  fin
+
+areas
+  ciudad : AreaC(1,1,100,100)
+robots
+  robot cliente
+  variables
+    av, ca, intentos, cant : numero
+  comenzar
+    av := PosAv
+    ca := PosCa
+    intentos := 4
+    RecibirMensaje(quien, robotjefe)
+    mientras (intentos > 0)
+      EnviarMensaje(robotjefe, V)
+      EnviarMensaje(robotjefe, quien)
+      RecibirMensaje(cant, robotjefe)
+      recolectar1A1(cant)
+      intentos := intentos - 1
+    EnviarMensaje(robotjefe, F)
+  fin
+
+  robot servidor
+  variables
+    cant, cantPapeles : numero
+    aux : boolean
+  comenzar
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    EnviarMensaje(3, robot3)
+    cant := 0
+    mientras (cant < 3)
+      RecibirMensaje(aux, *)
+      si (aux = F)
+        cant := cant + 1
+      sino
+        Random(cantPapeles, 1, 5)
+        depositarPapeles(cantPapeles)
+        RecibirMensaje(quien, *)
+        si (quien = 1)
+          EnviarMensaje(robot1, cantPapeles)
+        sino
+          si (quien = 2)
+            EnviarMensaje(robot2, cantPapeles)
+          sino
+            EnviarMensaje(robot3, cantPapeles)
+  fin
+
+variables
+  robot1 : cliente
+  robot2 : cliente
+  robot3 : cliente
+  robotjefe : servidor
+comenzar
+  AsignarArea(robot1, ciudad)
+  AsignarArea(robot2, ciudad)
+  AsignarArea(robot3, ciudad)
+  AsignarArea(robotjefe, ciudad)
+  Iniciar(robot1, 10, 1)
+  Iniciar(robot2, 11, 1)
+  Iniciar(robot3, 12, 1)
+  Iniciar(robotjefe, 13, 1)
+fin

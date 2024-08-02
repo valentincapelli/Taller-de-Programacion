@@ -1,0 +1,53 @@
+1_ Modulo objetos. Escriba un enunciado donde para su resolucion resulte apropiado
+usar herencia. Declare las clases involucradas y sus relaciones en lenguaje Java. En 
+las clases, declare solo los atributos y metodos mas relevantes para su enunciado
+(no los implemente).
+
+Se tiene un club de coro conformado por distintos grupos, de cada coro se tiene el
+nombre, un director y los coristas que conforman ese coro.
+Del director se tiene nombre, edad, dni y antiguedad. De cada corista se tiene
+nombre, edad, dni y tono de voz. Un coro puede cambiar de director y tambien puede
+agregar coristas. En el constructor del coro debe pasarse como parametro el 
+numero maximo de integrantes del coro y su nombre.
+
+public class Coro{
+    private String nombre;
+    private Director director;
+    private Corista vector[];
+    private int cantCoristas;
+    private int cantMaxCoristas;
+
+    public Coro(String nombre, int cantMaxCoristas);
+
+    public void setDirector(Director director)
+
+    public void agregarCorista(Corista corista);
+
+    // setter y getter de nombre, getter de director, cantCoristas y cantMaxCoristas
+}
+
+public class Persona{
+    private String nombre;
+    private int edad;
+    private int dni;
+
+    public Persona(String nombre, int edad, int dni)
+
+    // getters y setters de cada atributo
+}
+
+public class Director extends Persona{
+    private int antiguedad;
+
+    public Director()
+
+    //getter y setter de antiguedad
+}
+
+public class Corista extends Persona{
+    private int tono;
+
+    public Corista()
+
+    //getter y setter de tono
+}

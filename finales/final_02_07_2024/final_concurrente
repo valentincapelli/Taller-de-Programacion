@@ -1,0 +1,10 @@
+Se tienen de dos equipos de dos robots cada uno. Cada equipo tiene su recorrido, el
+primer robot de cada equipo recorrera hasta la mitad de su camino juntando flores,
+cuando termine, debera avisar a su companiero para que empiece y termine el recorrido,
+tambien juntando flores. El segundo robot no puede empezar hasta que el primero no
+termine. El segundo robot cuando termina debera avisar a un robot fiscalizar mandandole
+la cantidad de flores juntadas por el equipo, y este avisara que equipo es el ganador.
+El equipo 1 recorrera toda la avenida 2 y el equipo 2 toda la calle 99.
+
+El segundo robot de cada equipo tienen un esquina que es compartida, deberan manejar esta
+esquina bloqueandola para evitar colisiones.
