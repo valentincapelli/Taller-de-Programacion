@@ -1,0 +1,103 @@
+programa final_concurrente;
+
+procesos
+  proceso buscarFlor(ES cant : numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cant := cant + 1
+  fin
+
+  proceso buscarPapel(ES cant : numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cant := cant + 1
+  fin
+areas
+
+robots
+  robot fiscalizador
+  variables
+    cant : numero
+    ok : boolean
+  comenzar
+    EnviarMensaje(robot1, 1) // 1 equipo flor
+    EnviarMensaje(robot2, 1)
+    EnviarMensaje(robot3, 2) // 2 equipo papel
+    EnviarMensaje(robot4, 2)
+    repetir 2
+      RecibirMensaje(ok, *)
+    EnviarMensaje(robot2, V) // Aviso que pueden empezar a buscar
+    EnviarMensaje(robot4, V)
+        
+    cant := 0
+    mientras (cant < 2)
+      RecibirMensaje(quien, *)
+      cant := cant + 1
+      si (cant = 1)
+        Informar(quien)
+  fin
+
+  robot escondedor
+  variables
+    quien, avOrigen, caOrigen, av, ca : numero
+  comenzar
+    RecibirMensaje(quien, robotjefe)
+    avOrigen := PosAv
+    caOrigen := PosCa
+    repetir 2
+      calcularEsquina(av,ca)
+      BloquearEsquina(av, ca)
+      Pos(av, ca)
+      si (quien = 1)
+        depositarFlor
+      sino
+        depositarPapel
+      Pos(avOrigen, caOrigen)
+      LiberarEsquina(av, ca)
+    si (quien = 1)
+      EnviarMensaje(robot2, V)
+    sino
+      EnviarMensaje(robot4, V)
+  fin
+
+  robot buscador
+  variables
+    cant : numero
+  comenzar
+    avOrigen := PosAv
+    caOrigen := PosCa
+    RecibirMensaje(quien, robotjefe)
+    si (quien = 1)
+      RecibirMensaje(ok, robot1)
+    sino
+      RecibirMensaje(ok, robot3)
+    cant := 0
+    mientras (cant < 2)
+      calcularEsquina(av, ca)
+      BloquearEsquina(av, ca)
+      Pos(av, ca)
+      si (quien = 1)
+        buscarPapel(cant)
+      sino
+        buscarFlor(cant)
+      Pos(avOrigen, caOrigen)
+      LiberarEsquina(av, ca)
+    EnviarMensaje(robotjefe, F)
+    EnviarMensaje(robotjefe, quien)
+  fin
+
+variables
+  robot1 : escondedor
+  robot2 : buscador
+  robot3 : escondedor
+  robot4 : buscador
+  robot5 : fiscalizador
+comenzar
+  Iniciar(robot1, 6, 1)
+  Iniciar(robot2, 6, 2)
+  Iniciar(robot3, 6, 3)
+  Iniciar(robot4, 6, 4)
+  Iniciar(robotjefe, 6, 5)
+fin
