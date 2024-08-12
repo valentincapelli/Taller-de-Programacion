@@ -231,9 +231,9 @@ procedure listaEnUnRangoDeMinutos(a : arbol; t1, t2 : real; var L : lista);
     begin
         if (a <> nil) then begin
             if (t1 < a^.dato.tiempo) and (t2 > a^.dato.tiempo) then begin
-				agregarOrdenado(L, a^.dato);
-				listaEnUnRangoDeMinutos(a^.HI, t1, t2, L);
-				listaEnUnRangoDeMinutos(a^.HD, t1, t2, L)
+				        agregarOrdenado(L, a^.dato);
+				        listaEnUnRangoDeMinutos(a^.HI, t1, t2, L);
+				        listaEnUnRangoDeMinutos(a^.HD, t1, t2, L)
             end
             else if (t1 < a^.dato.tiempo) then
                 listaEnUnRangoDeMinutos(a^.HI, t1, t2, L)

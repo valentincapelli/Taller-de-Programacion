@@ -1,0 +1,112 @@
+programa final_concurrente
+procesos
+  proceso calcularEsquina(ES av : numero; ES ca : numero)
+  variables
+    aux : numero
+  comenzar
+    Random(aux, 1, 20)
+    av := aux
+    Random(aux, 1, 20)
+    ca := aux
+  fin
+
+  proceso buscarEsquina(E av : numero; E ca : numero; ES flores : numero)
+  variables
+    avOrigen, caOrigen : numero
+  comenzar
+    avOrigen := PosAv
+    caOrigen := PosCa
+    BloquearEsquina(av, ca)
+    Pos(av, ca)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores := flores + 1
+    Pos(avOrigen, caOrigen)
+    LiberarEsquina(av, ca)    
+  fin
+
+  proceso depositarFlores(E flores : numero)
+  variables
+    avOrigen, caOrigen : numero
+  comenzar
+    avOrigen := PosAv
+    caOrigen := PosCa
+    Pos(25, 25)
+    repetir flores
+      depositarFlor
+    Pos(avOrigen, caOrigen)
+  fin
+
+areas
+  AreaParcial : AreaPC(1, 1, 20, 20)
+  Area1 : AreaP(21, 21, 21, 21)
+  Area2 : AreaP(22, 22, 22, 22)
+  AreaJefe : AreaP(23, 23, 23, 23)
+  AreaPerdedor : AreaPC(25, 25, 25, 25)
+
+robots
+  robot fiscalizador
+  variables
+    cant1, cant2, av, ca, cant, quien : numero
+  comenzar
+    cant1 := 0
+    cant2 := 0
+    EnviarMensaje(1, robot1)
+    EnviarMensaje(2, robot2)
+    repetir 10
+      calcularEsquina(av, ca)
+      RecibirMensaje(quien, *)
+      si (quien = 1)
+        EnviarMensaje(av, robot1)
+        EnviarMensaje(ca, robot1)
+        RecibirMensaje(cant, robot1)
+        cant1 := cant1 + cant
+      sino
+        EnviarMensaje(av, robot2)
+        EnviarMensaje(ca, robot2)
+        RecibirMensaje(cant, robot2)
+        cant2 := cant2 + cant
+    si (cant1 > cant2)
+      Informar(1)
+      EnviarMensaje(V, robot1)
+      EnviarMensaje(F, robot2)
+    sino 
+      Informar(2)
+      EnviarMensaje(F, robot1)
+      EnviarMensaje(V, robot2)
+  fin
+
+  robot jugador
+  variables
+    quien, av, ca, flores : numero
+    ok : boolean
+  comenzar
+    RecibirMensaje(quien, robotjefe)
+    repetir 5
+      EnviarMensaje(quien, robotjefe)
+      RecibirMensaje(av, robotjefe)
+      RecibirMensaje(ca, robotjefe)
+      buscarEsquina(av, ca, flores)
+      EnviarMensaje(flores, robotjefe)
+    RecibirMensaje(ok, robotjefe)
+    si (ok = F)
+      depositarFlores(flores)
+  fin
+  
+variables
+  robot1 : jugador
+  robot2 : jugador
+  robotjefe : fiscalizador
+comenzar
+  AsignarArea(robot1, Area1)
+  AsignarArea(robot1, AreaParcial)
+  AsignarArea(robot1, AreaPerdedor)
+  AsignarArea(robot2, Area2)
+  AsignarArea(robot2, AreaParcial)
+  AsignarArea(robot2, AreaPerdedor)
+  AsignarArea(robotjefe, AreaJefe)
+  Iniciar(robot1, 21, 21)
+  Iniciar(robot2, 22, 22)
+  Iniciar(robotjefe, 23, 23)
+
+fin

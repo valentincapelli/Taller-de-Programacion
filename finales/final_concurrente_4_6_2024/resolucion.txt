@@ -1,5 +1,4 @@
-programa final_concurrente;
-
+programa final_concurrente
 procesos
   proceso buscarFlor(ES cant : numero)
   comenzar
@@ -14,29 +13,43 @@ procesos
       tomarPapel
       cant := cant + 1
   fin
-areas
 
+  proceso calcularEsquina(ES av : numero ; ES ca : numero)
+  variables
+    aux : numero
+  comenzar
+    Random(aux, 1, 5)
+    av := aux
+    Random(aux, 1, 5)
+    ca := aux
+  fin
+
+areas
+  ciudad : AreaC(1,1,100,100)
 robots
   robot fiscalizador
   variables
-    cant : numero
+    cant, quien : numero
     ok : boolean
   comenzar
-    EnviarMensaje(robot1, 1) // 1 equipo flor
-    EnviarMensaje(robot2, 1)
-    EnviarMensaje(robot3, 2) // 2 equipo papel
-    EnviarMensaje(robot4, 2)
+    EnviarMensaje(1, robot1) {1 equipo flor}
+    EnviarMensaje(1, robot2)
+    EnviarMensaje(2, robot3) {2 equipo papel}
+    EnviarMensaje(2, robot4)
     repetir 2
       RecibirMensaje(ok, *)
-    EnviarMensaje(robot2, V) // Aviso que pueden empezar a buscar
-    EnviarMensaje(robot4, V)
+    EnviarMensaje(V, robot2) {Aviso que pueden empezar a buscar}
+    EnviarMensaje(V, robot4)
         
-    cant := 0
+    {cant := 0
     mientras (cant < 2)
       RecibirMensaje(quien, *)
       cant := cant + 1
       si (cant = 1)
-        Informar(quien)
+        Informar(quien)}
+    repetir 2
+      RecibirMensaje(quien, *)
+      Informar(quien)
   fin
 
   robot escondedor
@@ -56,25 +69,19 @@ robots
         depositarPapel
       Pos(avOrigen, caOrigen)
       LiberarEsquina(av, ca)
-    si (quien = 1)
-      EnviarMensaje(robot2, V)
-    sino
-      EnviarMensaje(robot4, V)
+    EnviarMensaje(V, robotjefe)
   fin
 
   robot buscador
   variables
-    cant : numero
+    cant, avOrigen, caOrigen, av, ca, quien : numero
+    ok : boolean
   comenzar
     avOrigen := PosAv
     caOrigen := PosCa
     RecibirMensaje(quien, robotjefe)
-    si (quien = 1)
-      RecibirMensaje(ok, robot1)
-    sino
-      RecibirMensaje(ok, robot3)
-    cant := 0
-    mientras (cant < 2)
+    RecibirMensaje(ok, robotjefe)
+    repetir 2
       calcularEsquina(av, ca)
       BloquearEsquina(av, ca)
       Pos(av, ca)
@@ -84,8 +91,7 @@ robots
         buscarFlor(cant)
       Pos(avOrigen, caOrigen)
       LiberarEsquina(av, ca)
-    EnviarMensaje(robotjefe, F)
-    EnviarMensaje(robotjefe, quien)
+    EnviarMensaje(quien, robotjefe)
   fin
 
 variables
@@ -93,8 +99,13 @@ variables
   robot2 : buscador
   robot3 : escondedor
   robot4 : buscador
-  robot5 : fiscalizador
+  robotjefe : fiscalizador
 comenzar
+  AsignarArea(robot1, ciudad)
+  AsignarArea(robot2, ciudad)
+  AsignarArea(robot3, ciudad)
+  AsignarArea(robot4, ciudad)
+  AsignarArea(robotjefe, ciudad)
   Iniciar(robot1, 6, 1)
   Iniciar(robot2, 6, 2)
   Iniciar(robot3, 6, 3)
